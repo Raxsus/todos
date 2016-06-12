@@ -1,43 +1,54 @@
 import React from 'react';
-import {expect} from 'chai';
+import chai from 'chai';
 import {shallow} from 'enzyme';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
 import Todo from '../../components/Todo'
 
-const mockStore = configureMockStore([ thunk ]);
-const storeStateMock = {
-  onClick: function () {
+let expect = chai.expect;
 
+let store = {
+  onClick: function () {
+    
   },
   completed: false,
   text: 'test'
 };
 
-let store;
 let component;
-describe('tests for MyContainerComponent', () => {
+
+describe('Todo presentation component', () => {
   beforeEach(() => {
-    store = mockStore(storeStateMock);
-    component = shallow(<Todo {...storeStateMock} />).shallow();
+    component = shallow(<Todo {...store} />).shallow();
   });
 
   it('renders component', () => {
     expect(component.find('span')).to.have.length.of(1);
   });
 
-  it('component contains text equal ' + storeStateMock.text, () => {
-    expect(component.find('span').text()).to.equal(storeStateMock.text);
+  it('component contains text equal ' + store.text, () => {
+    expect(component.find('span').text()).to.equal(store.text);
   });
 
   it('component style textDecoration should be "none" ', () => {
     expect(component.prop('style').textDecoration).to.equal('none');
   });
 
-  it('component click" ', () => {
-    component.simulate('click');
-    expect(component.prop('style').textDecoration).to.equal('none');
+});
+
+describe('Completed Todo presentation component', () => {
+  beforeEach(() => {
+    store.completed = true;
+    component = shallow(<Todo {...store} />).shallow();
   });
 
+  it('renders component', () => {
+    expect(component.find('span')).to.have.length.of(1);
+  });
+
+  it('component contains text equal ' + store.text, () => {
+    expect(component.find('span').text()).to.equal(store.text);
+  });
+
+  it('completed component style textDecoration should be "line-through" ', () => {
+    expect(component.prop('style').textDecoration).to.equal('line-through');
+  });
 });
